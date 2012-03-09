@@ -8,12 +8,16 @@ class FileManagerController {
     static scaffold = true
 
     def uploadFile() {
+        String fileName = ""
+        String extension = ""
         CommonsMultipartFile commonsMultipartFile = params.upload
         Boolean success = false
         if (commonsMultipartFile) {
             success = fileManagerService.processFile(commonsMultipartFile)
+            fileName = commonsMultipartFile.getOriginalFilename()
+            extension = fileName.substring(fileName.lastIndexOf(".") ?: 0)
         }
-        render "${success}"
+        render "result${extension}"
     }
 
     def renderFile() {

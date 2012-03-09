@@ -1,0 +1,6 @@
+You can upload file using curl command and file will get uploaded by the app
+eg: 
+curl --form upload=@localFilePath/filename http://file-manager.cloudfoundry.com/uploadFile
+
+A demo app has been deployed on cloud foundry with url http://file-manager.cloudfoundry.com/
+
