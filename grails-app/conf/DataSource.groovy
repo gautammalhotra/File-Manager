@@ -1,5 +1,7 @@
 dataSource {
- }
+    username = "root"
+    password = "igdefault"
+}
 hibernate {
     cache.use_second_level_cache = true
     cache.use_query_cache = true
@@ -14,8 +16,6 @@ environments {
             pooled = true
             driverClassName = "com.mysql.jdbc.Driver"
             dialect = org.hibernate.dialect.MySQL5InnoDBDialect
-            username = "root"
-            password = "igdefault"
         }
     }
     test {
@@ -25,8 +25,6 @@ environments {
             pooled = true
             driverClassName = "com.mysql.jdbc.Driver"
             dialect = org.hibernate.dialect.MySQL5InnoDBDialect
-            username = "root"
-            password = "igdefault"
         }
     }
     production {

@@ -22,7 +22,7 @@ class ApplicationFilters {
                 params?.each {String key, value ->
                     try {
                         if (value?.getClass() == String) {
-                            params[key] = value.trim()
+                            params[key] = value?.trim()
                         }
                     } catch (Throwable t) {
                         t.printStackTrace()
