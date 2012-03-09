@@ -15,7 +15,7 @@ class FileManagerController {
         if (commonsMultipartFile) {
             success = fileManagerService.processFile(commonsMultipartFile)
             fileName = commonsMultipartFile.getOriginalFilename()
-            extension = fileName.substring(fileName.lastIndexOf(".") ?: 0)
+            extension = fileName.substring((fileName.lastIndexOf(".") > 0) ? fileName.lastIndexOf(".") : 0)
             try {
                 response.setHeader("Content-disposition", "attachment; filename=${commonsMultipartFile.getOriginalFilename()}")
                 response.setContentType(commonsMultipartFile.contentType)
