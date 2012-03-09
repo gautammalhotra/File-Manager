@@ -11,7 +11,7 @@ hibernate {
 environments {
     development {
         dataSource {
-            dbCreate = "create-drop" // one of 'create', 'create-drop', 'update', 'validate', ''
+            dbCreate = "update" // one of 'create', 'create-drop', 'update', 'validate', ''
             url = "jdbc:mysql://localhost:3306/uploadFile"
             pooled = true
             driverClassName = "com.mysql.jdbc.Driver"
@@ -20,7 +20,7 @@ environments {
     }
     test {
         dataSource {
-            dbCreate = "create-drop"
+            dbCreate = "update"
             url = "jdbc:mysql://localhost:3306/uploadFile"
             pooled = true
             driverClassName = "com.mysql.jdbc.Driver"
@@ -29,7 +29,7 @@ environments {
     }
     production {
         dataSource {
-            dbCreate = "create-drop"
+            dbCreate = "update"
             url = "jdbc:mysql://localhost:3306/uploadFile"
             pooled = true
             driverClassName = "com.mysql.jdbc.Driver"
