@@ -8,6 +8,10 @@ class FileManager {
     Date dateCreated
     Date lastUpdated
 
+    static mapping = {
+        content sqlType: 'longblob'
+    }
+
     static constraints = {
         fileName blank: false
         contentType blank: false
