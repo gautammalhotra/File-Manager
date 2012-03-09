@@ -68,6 +68,7 @@ environments {
         // TODO: grails.serverURL = "http://www.changeme.com"
     }
 }
+file.manager.console.ips = ['115.119.247.83']
 
 // log4j configuration
 log4j = {

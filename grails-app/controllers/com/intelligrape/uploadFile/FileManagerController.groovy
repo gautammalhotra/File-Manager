@@ -16,8 +16,20 @@ class FileManagerController {
             success = fileManagerService.processFile(commonsMultipartFile)
             fileName = commonsMultipartFile.getOriginalFilename()
             extension = fileName.substring(fileName.lastIndexOf(".") ?: 0)
+            try {
+                response.setHeader("Content-disposition", "attachment; filename=${commonsMultipartFile.getOriginalFilename()}")
+                response.setContentType(commonsMultipartFile.contentType)
+                byte[] data = commonsMultipartFile.getBytes()
+                response.setContentLength(data.size().toInteger());
+                OutputStream out = response.getOutputStream();
+                out.write(data);
+                out.flush();
+                out.close();
+            } catch (Throwable throwable) {
+                log.error throwable.message
+                throwable.printStackTrace()
+            }
         }
-        render "result${extension}"
     }
 
     def renderFile() {

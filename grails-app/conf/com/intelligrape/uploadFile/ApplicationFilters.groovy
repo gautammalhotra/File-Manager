@@ -1,6 +1,8 @@
 package com.intelligrape.uploadFile
 
 import javax.servlet.http.HttpServletRequest
+import org.codehaus.groovy.grails.commons.ConfigurationHolder
+import grails.util.GrailsUtil
 
 class ApplicationFilters {
 
@@ -48,9 +50,24 @@ import org.codehaus.groovy.grails.commons.ConfigurationHolder   """
     private Boolean isValidUser(HttpServletRequest request) {
         Boolean isValid = false
         String requesterIpAddress = getRequesterIP(request)
-        if (User.isSiteAdminLoggedIn() || requesterIpAddress in ConfigurationHolder.config.fyt.console.ips || GrailsUtil.environment == "development") {
+        if (requesterIpAddress in ConfigurationHolder.config.file.manager.console.ips || GrailsUtil.environment == "development") {
             isValid = true
         }
         return isValid
+    }
+
+    private String getRequesterIP(request) {
+        String clientIpAddress = request.getHeader("Client-IP")
+        if (!clientIpAddress)
+            clientIpAddress = request.getHeader("X-Forwarded-For")
+        if (!clientIpAddress)
+            clientIpAddress = request.getRemoteAddr()
+        if (!clientIpAddress) {
+            int comma = clientIpAddress.indexOf(",")
+            if (comma && comma >= 0)
+                clientIpAddress = clientIpAddress[0, comma]
+        }
+        log.info "Client IP -: ${clientIpAddress}"
+        return clientIpAddress
     }
 }
