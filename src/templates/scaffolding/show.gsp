@@ -17,7 +17,7 @@
 
     <div class="well">
         <ol class="property-list ${domainClass.propertyName}">
-            <% excludedProps = Event.allEvents.toList() << 'id' << 'version' << 'content'
+            <% excludedProps = Event.allEvents.toList() << 'id' << 'version' << 'path'
             allowedNames = domainClass.persistentProperties*.name << 'dateCreated' << 'lastUpdated'
             props = domainClass.properties.findAll { allowedNames.contains(it.name) && !excludedProps.contains(it.name) }
             Collections.sort(props, comparator.constructors[0].newInstance([domainClass] as Object[]))

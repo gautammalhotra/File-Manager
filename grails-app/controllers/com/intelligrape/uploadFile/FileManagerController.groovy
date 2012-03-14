@@ -8,27 +8,11 @@ class FileManagerController {
     static scaffold = true
 
     def uploadFile() {
-        String fileName = ""
-        String extension = ""
         CommonsMultipartFile commonsMultipartFile = params.upload
-        Boolean success = false
         if (commonsMultipartFile) {
-            success = fileManagerService.processFile(commonsMultipartFile)
-            fileName = commonsMultipartFile.getOriginalFilename()
-            extension = fileName.substring((fileName.lastIndexOf(".") > 0) ? fileName.lastIndexOf(".") : 0)
-            try {
-                response.setHeader("Content-disposition", "attachment; filename=${commonsMultipartFile.getOriginalFilename()}")
-                response.setContentType(commonsMultipartFile.contentType)
-                byte[] data = commonsMultipartFile.getBytes()
-                response.setContentLength(data.size().toInteger());
-                OutputStream out = response.getOutputStream();
-                out.write(data);
-                out.flush();
-                out.close();
-            } catch (Throwable throwable) {
-                log.error throwable.message
-                throwable.printStackTrace()
-            }
+            FileManager fileManager = fileManagerService.processFile(commonsMultipartFile)
+            render fileManagerService.generateMD5(new File(fileManager.completeFilePath))
+            render "\n"
         }
     }
 
@@ -36,9 +20,9 @@ class FileManagerController {
         FileManager fileManager = (params.id && params.id.toString().isLong()) ? FileManager.findById(params.long('id')) : null
         if (fileManager) {
             try {
-                response.setHeader("Content-disposition", "attachment; filename=${fileManager.fileName}")
+                response.setHeader("Content-disposition", "attachment; filename=${fileManager.name}")
                 response.setContentType(fileManager.contentType)
-                byte[] data = fileManager.content
+                byte[] data = fileManagerService.getFileBytes(fileManager)
                 response.setContentLength(data.size().toInteger());
                 OutputStream out = response.getOutputStream();
                 out.write(data);
@@ -51,5 +35,19 @@ class FileManagerController {
         } else {
             render ''
         }
+    }
+
+    def delete() {
+        FileManager fileManager = (params.id && params.id.toString().isLong()) ? FileManager.findById(params.long('id')) : null
+        if (fileManager) {
+            if (fileManagerService.deleteFile(fileManager)) {
+                flash.message = "File manager with id: ${fileManager.id} has been deleted successfully"
+            } else {
+                flash.message = "File manager cannot be deleted successfully"
+            }
+        } else {
+            flash.message = "No file manager found with id: ${params.id}"
+        }
+        redirect(controller: 'fileManager', action: 'list')
     }
 }

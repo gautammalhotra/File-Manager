@@ -62,14 +62,22 @@ grails.hibernate.cache.queries = true
 environments {
     development {
         grails.logging.jul.usebridge = true
+        file.manager.console.ips = ['115.119.247.83']
+        fileManagerRootFilePath = "/var/tmp/"
     }
     production {
+        file.manager.console.ips = ['115.119.247.83']
+        fileManagerRootFilePath = "/var/tmp/"
+        grails.logging.jul.usebridge = false
+        // TODO: grails.serverURL = "http://www.changeme.com"
+    }
+    test {
+        file.manager.console.ips = ['115.119.247.83']
+        fileManagerRootFilePath = "/var/tmp/"
         grails.logging.jul.usebridge = false
         // TODO: grails.serverURL = "http://www.changeme.com"
     }
 }
-file.manager.console.ips = ['115.119.247.83']
-
 // log4j configuration
 log4j = {
     // Example of changing the log pattern for the default console
