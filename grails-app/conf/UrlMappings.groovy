@@ -13,6 +13,5 @@ class UrlMappings {
         "/fileManager/edit/$id"(controller: "fileManager", action: "list")
         "500"(view: '/error')
         "404"(view: '/error')
-        "/openCon"(controller: 'console', action: 'index')
     }
 }

@@ -63,17 +63,17 @@ environments {
     development {
         grails.logging.jul.usebridge = true
         file.manager.console.ips = ['115.119.247.83']
-        fileManagerRootFilePath = "/var/tmp/"
+        fileManagerRootFilePath = System.getProperty('java.io.tmpdir')
     }
     production {
         file.manager.console.ips = ['115.119.247.83']
-        fileManagerRootFilePath = "/var/tmp/"
+        fileManagerRootFilePath = System.getProperty('java.io.tmpdir')
         grails.logging.jul.usebridge = false
         // TODO: grails.serverURL = "http://www.changeme.com"
     }
     test {
         file.manager.console.ips = ['115.119.247.83']
-        fileManagerRootFilePath = "/var/tmp/"
+        fileManagerRootFilePath = System.getProperty('java.io.tmpdir')
         grails.logging.jul.usebridge = false
         // TODO: grails.serverURL = "http://www.changeme.com"
     }
