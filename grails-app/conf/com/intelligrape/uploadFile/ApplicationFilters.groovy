@@ -1,9 +1,5 @@
 package com.intelligrape.uploadFile
 
-import javax.servlet.http.HttpServletRequest
-import org.codehaus.groovy.grails.commons.ConfigurationHolder
-import grails.util.GrailsUtil
-
 class ApplicationFilters {
 
     def filters = {
@@ -33,41 +29,5 @@ class ApplicationFilters {
             }
         }
 
-        consoleImports(controller: 'console', action: '*') {
-            before = {
-                if (isValidUser(request)) {
-                    String importStatements = """import com.intelligrape.uploadFile.*;
-import org.codehaus.groovy.grails.commons.ConfigurationHolder   """
-                    session['_grails_console_last_code_'] = session['_grails_console_last_code_'] ?: importStatements
-                } else {
-                    flash.errorMessage = "Sorry, you're not authorized to view this page."
-                    redirect(controller: 'register', action: 'index')
-                }
-            }
-        }
-    }
-
-    private Boolean isValidUser(HttpServletRequest request) {
-        Boolean isValid = false
-        String requesterIpAddress = getRequesterIP(request)
-        if (requesterIpAddress in ConfigurationHolder.config.file.manager.console.ips || GrailsUtil.environment == "development") {
-            isValid = true
-        }
-        return isValid
-    }
-
-    private String getRequesterIP(request) {
-        String clientIpAddress = request.getHeader("Client-IP")
-        if (!clientIpAddress)
-            clientIpAddress = request.getHeader("X-Forwarded-For")
-        if (!clientIpAddress)
-            clientIpAddress = request.getRemoteAddr()
-        if (!clientIpAddress) {
-            int comma = clientIpAddress.indexOf(",")
-            if (comma && comma >= 0)
-                clientIpAddress = clientIpAddress[0, comma]
-        }
-        log.info "Client IP -: ${clientIpAddress}"
-        return clientIpAddress
     }
 }
