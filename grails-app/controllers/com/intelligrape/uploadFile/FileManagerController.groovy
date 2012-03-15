@@ -9,11 +9,13 @@ class FileManagerController {
 
     def uploadFile() {
         CommonsMultipartFile commonsMultipartFile = params.upload
-        if (commonsMultipartFile) {
+        String message = commonsMultipartFile ? fileManagerService.isFileAlreadyExists(commonsMultipartFile) : "No file has been uploaded"
+        if (!message) {
             FileManager fileManager = fileManagerService.processFile(commonsMultipartFile)
-            render fileManagerService.generateMD5(new File(fileManager.completeFilePath))
-            render "\n"
+            message = FileManager.generateMD5(new File(fileManager.completeFilePath))
         }
+        render message
+        render "\n"
     }
 
     def renderFile() {

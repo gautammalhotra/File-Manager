@@ -1,7 +1,6 @@
 package com.intelligrape.uploadFile
 
 import org.springframework.web.multipart.commons.CommonsMultipartFile
-import java.security.MessageDigest
 
 class FileManagerService {
 
@@ -17,6 +16,30 @@ class FileManagerService {
             throwable.printStackTrace()
         }
         return fileManager
+    }
+
+    public String isFileAlreadyExists(CommonsMultipartFile commonsMultipartFile) {
+        String message = ""
+        File tempFolderLocation = null
+        try {
+            String tempFolderStr = Util.generateRandomFolderInTemp()
+            tempFolderLocation = new File(tempFolderStr)
+            File uploadedFile = new File("${tempFolderStr}/${commonsMultipartFile.getOriginalFilename()}")
+            uploadedFile.bytes = commonsMultipartFile.bytes
+            FileManager fileManager = FileManager.findByMd5Sum(FileManager.generateMD5(uploadedFile))
+            if (fileManager) {
+                message = "File already exists with same md5sum: ${fileManager.md5Sum} ${(fileManager.name == commonsMultipartFile.getOriginalFilename()) ? 'and same' : 'but with different'} name: ${fileManager.name}"
+            }
+        } catch (Throwable throwable) {
+            log.error throwable.message
+            throwable.printStackTrace()
+        }
+        finally {
+            if (tempFolderLocation.exists()) {
+                tempFolderLocation.deleteDir()
+            }
+        }
+        return message
     }
 
     public byte[] getFileBytes(FileManager fileManager) {
@@ -38,9 +61,9 @@ class FileManagerService {
     public Boolean deleteFile(FileManager fileManager) {
         Boolean success = false
         try {
-            File uploadedFile = new File(fileManager.completeFolderPath)
-            if (uploadedFile.isDirectory()) {
-                uploadedFile.deleteDir()
+            File uploadedFile = new File(fileManager.completeFilePath)
+            if (uploadedFile.exists()) {
+                uploadedFile.delete()
             } else {
                 log.error "No file exists during delete operation for file manager: ${fileManager}"
             }
@@ -52,19 +75,5 @@ class FileManagerService {
             throwable.printStackTrace()
         }
         return success
-    }
-
-    def generateMD5(File file) {
-        MessageDigest digest = MessageDigest.getInstance("MD5")
-        file.withInputStream() {is ->
-            byte[] buffer = new byte[8192]
-            int read = 0
-            while ((read = is.read(buffer)) > 0) {
-                digest.update(buffer, 0, read);
-            }
-        }
-        byte[] md5sum = digest.digest()
-        BigInteger bigInt = new BigInteger(1, md5sum)
-        return bigInt.toString(16)
     }
 }

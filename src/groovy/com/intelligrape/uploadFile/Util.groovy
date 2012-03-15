@@ -9,10 +9,24 @@ class Util {
         if (path.isEmpty()) {
             path = tempDir
         }
+        createDirectoryIfNotExist(path)
         return path
     }
 
     static String getTempDir() {
         return System.getProperty('java.io.tmpdir')
+    }
+
+    static String createDirectoryIfNotExist(String directoryPath) {
+        File directory = new File(directoryPath)
+        if (!directory.exists()) {
+            directory.mkdirs()
+        }
+        return directoryPath
+    }
+
+    static String generateRandomFolderInTemp() {
+        String path = "${tempDir}/${UUID.randomUUID().toString()}"
+        return createDirectoryIfNotExist(path)
     }
 }
